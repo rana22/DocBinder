@@ -2,10 +2,9 @@ package com.management.doc.binder.web.services;
 
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,28 +40,27 @@ public class UsersDocumentRestServices {
 	UserDocumentRepository ursDocRepo;
 	
 	@RequestMapping(value="/saveImg", method= RequestMethod.POST, produces=MediaType.APPLICATION_JSON)
-	public @ResponseBody ResponseEntity<List<UsersDocument>> saveDocument(@RequestParam("id") String imgPath){
+	public @ResponseBody ResponseEntity<List<UsersDocument>> saveDocument(@RequestParam("id") String imgPath) throws Exception{
 		logger.info("REST call TO Document ServicesimgPat "+ imgPath);
 		
 		List<UsersDocument> docToAdd = new ArrayList<UsersDocument>();
 		UsersDocument ursDoc = new UsersDocument();
 		ursDoc.setDocId(123l);
 		ursDoc.setDocName("some name");
-		ursDoc.setUserId(12L);	
+		ursDoc.setUserId(12L);
 		
 		logger.info("inserting user document");
 		
-		File file = new File(imgPath);
-		byte[] bFile = new byte[(int) file.length()];
-			try {
-				FileInputStream fileInputStream = new FileInputStream(file);
-				//convert file into array of bytes
-				fileInputStream.read(bFile);
-				fileInputStream.close();
-	        } catch (Exception e) {
-	        	logger.debug("Exception is due to {}", e);
-	        }
-		ursDoc.setImage(bFile);
+		BufferedImage originalImage =
+                ImageIO.read(new File(imgPath));
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		ImageIO.write(originalImage, "png", baos);
+		baos.flush();
+		byte[] imageInByte = baos.toByteArray();
+		baos.close();
+		
+		ursDoc.setImage(imageInByte);
 		docToAdd.add(ursDoc);
 		ursDocRepo.save(docToAdd);
 		
@@ -78,18 +76,17 @@ public class UsersDocumentRestServices {
 		getAllDoc = ursDocRepo.findAll();
 		int arraySize = getAllDoc.size();
 		
-//		getAllDoc.clear();
 		UsersDocument ursLastDoc = new UsersDocument();
 		ursLastDoc = getAllDoc.get(arraySize-1);
 		
 		InputStream in = new ByteArrayInputStream(ursLastDoc.getImage());
-		BufferedImage bImageFromConvert = ImageIO.read(in);
-
-		ImageIO.write(bImageFromConvert, "jpg", new File(
-				"/Users/ambarrana/Desktop/test123.jpg"));
-
-		getLastDoc.add(ursLastDoc);
 		
+		logger.info("convert image {}", in);
+		
+		BufferedImage bImageFromConvert = ImageIO.read(in);
+		ImageIO.write(bImageFromConvert, "png", new File(
+				"/Users/ambarrana/Desktop/test123.png"));
+		getLastDoc.add(ursLastDoc);
 		
 		return new ResponseEntity<List<UsersDocument>>(getLastDoc, HttpStatus.OK);
 		}
