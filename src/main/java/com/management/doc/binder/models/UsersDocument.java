@@ -40,14 +40,26 @@ public class UsersDocument implements Serializable{
 	@Column(name="doc_id")
 	private long docId;
 	
+	@Column(name="doc_size")
+	private long docSize;
+	
+	@Column(name="doc_type")
+	private String docType;
+	
+	@Column(name="short_desc")
+	private String shortDesc;
+	
 	@Column(name="create_date")
 	private Timestamp createDate;
 	
 	@Column(name="update_date")
 	private Timestamp updateDate;
 	
-	@Column(name="doc_catagory")
-	private String docCataggory;
+	@Column(name="doc_category")
+	private String docCategory;
+	
+	@Column(name="doc_categoryid")
+	private int docCategoryId;
 	
 	@Column(name="image")
 	private byte[] image;
@@ -100,12 +112,12 @@ public class UsersDocument implements Serializable{
 		this.updateDate = updateDate;
 	}
 
-	public String getDocCataggory() {
-		return docCataggory;
+	public String getDocCategory() {
+		return docCategory;
 	}
 
-	public void setDocCataggory(String docCataggory) {
-		this.docCataggory = docCataggory;
+	public void setDocCategory(String docCategory) {
+		this.docCategory = docCategory;
 	}
 
 	public byte[] getImage() {
@@ -114,6 +126,38 @@ public class UsersDocument implements Serializable{
 
 	public void setImage(byte[] image) {
 		this.image = image;
+	}
+
+	public long getDocSize() {
+		return docSize;
+	}
+
+	public void setDocSize(long docSize) {
+		this.docSize = docSize;
+	}
+
+	public String getDocType() {
+		return docType;
+	}
+
+	public void setDocType(String docType) {
+		this.docType = docType;
+	}
+
+	public String getShortDesc() {
+		return shortDesc;
+	}
+
+	public void setShortDesc(String shortDesc) {
+		this.shortDesc = shortDesc;
+	}
+
+	public int getDocCategoryId() {
+		return docCategoryId;
+	}
+
+	public void setDocCategoryId(int docCategoryId) {
+		this.docCategoryId = docCategoryId;
 	}
 	
 	
