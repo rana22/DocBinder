@@ -33,7 +33,7 @@ public class UserProfileImpl {
 	
 	List<UserProfiles> usrList = new ArrayList<UserProfiles>();
 	
-//	@Scheduled(initialDelay = 10000, fixedDelay = 40000)
+	//@Scheduled(initialDelay = 10000, fixedDelay = 40000)
 	public void getAllUser(){
 		log.debug("getting all the users = ===" );
 		
@@ -46,8 +46,9 @@ public class UserProfileImpl {
 		log.info("total no of user = " + userProfile.size());
 		
 		UserProfiles urs = new UserProfiles();
-		urs.setFirstName("ambar");
-		urs.setLastName("Rana");
+		urs.setFirstName("pratap");
+		urs.setLastName("Sapkota");
+		urs.setUserName("psapkota");
 		usrList.add(urs);
 		userProfileRepository.save(usrList);
 		

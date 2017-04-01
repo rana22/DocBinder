@@ -29,7 +29,7 @@ public class UserDocumentServices {
 	@Inject
 	UserDocumentRepository ursDocRepo;
 	
-//	@Scheduled(initialDelay = 10000, fixedDelay = 40000)
+	//@Scheduled(initialDelay = 10000, fixedDelay = 40000)
 	public void insertDocument(){
 		List<UsersDocument> docToAdd = new ArrayList<UsersDocument>();
 		UsersDocument ursDoc = new UsersDocument();
@@ -39,7 +39,7 @@ public class UserDocumentServices {
 		
 		logger.info("inserting user document");
 		
-		File file = new File("/Users/ambarrana/Desktop/abc.png");
+		File file = new File("C:/Users/pratp/Desktop/DSC_9000.jpg");
 		
 		byte[] bFile = new byte[(int) file.length()];
 		

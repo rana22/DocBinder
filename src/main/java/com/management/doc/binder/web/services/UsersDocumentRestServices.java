@@ -1,5 +1,7 @@
 package com.management.doc.binder.web.services;
 
+import static org.assertj.core.api.Assertions.useDefaultRepresentation;
+
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -10,6 +12,7 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.core.MediaType;
 
 import org.slf4j.Logger;
@@ -22,8 +25,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.management.doc.binder.models.UsersDocument;
+import com.management.doc.binder.service.impl.Category;
 import com.management.doc.binder.services.UserDocumentRepository;
 
 /**
@@ -39,28 +44,44 @@ public class UsersDocumentRestServices {
 	@Inject
 	UserDocumentRepository ursDocRepo;
 	
+	
 	@RequestMapping(value="/saveImg", method= RequestMethod.POST, produces=MediaType.APPLICATION_JSON)
-	public @ResponseBody ResponseEntity<List<UsersDocument>> saveDocument(@RequestParam("id") String imgPath) throws Exception{
-		logger.info("REST call TO Document ServicesimgPat "+ imgPath);
+	public @ResponseBody ResponseEntity<List<UsersDocument>> saveDocument(@RequestParam("file") MultipartFile file, HttpServletRequest req) throws Exception{
+		
+		logger.info("Original file Name ==== {}", file.getOriginalFilename());
+		
+		String fileName = req.getParameter("name");
+		long contentLength = file.getSize();
+		String contentType = file.getContentType();
+		byte [] byteArr = file.getBytes();
+		String category = req.getParameter("category");
+		String shortDesc = req.getParameter("description");
+		Category categoryType= Category.EDUCATION;
 		
 		List<UsersDocument> docToAdd = new ArrayList<UsersDocument>();
 		UsersDocument ursDoc = new UsersDocument();
 		ursDoc.setDocId(123l);
-		ursDoc.setDocName("some name");
+		ursDoc.setDocName(fileName);
 		ursDoc.setUserId(12L);
-		
+		ursDoc.setImage(byteArr);
+		ursDoc.setDocType(contentType);
+		ursDoc.setDocSize(contentLength);
+		ursDoc.setDocCategory(categoryType.toString());
+        ursDoc.setShortDesc(shortDesc);
+        
 		logger.info("inserting user document");
 		
-		BufferedImage originalImage =
-                ImageIO.read(new File(imgPath));
-
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		ImageIO.write(originalImage, "png", baos);
-		baos.flush();
-		byte[] imageInByte = baos.toByteArray();
-		baos.close();
+//		BufferedImage originalImage =
+//                ImageIO.read(new File(imgPath));
+//
+//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//		ImageIO.write(originalImage, "png", baos);
+//		baos.flush();
+//		byte[] imageInByte = baos.toByteArray();
+//		baos.close();
 		
-		ursDoc.setImage(imageInByte);
+//		ursDoc.setImage(imageInByte);
+//		docToAdd.add(ursDoc);
 		docToAdd.add(ursDoc);
 		ursDocRepo.save(docToAdd);
 		
@@ -84,8 +105,8 @@ public class UsersDocumentRestServices {
 		logger.info("convert image {}", in);
 		
 		BufferedImage bImageFromConvert = ImageIO.read(in);
-		ImageIO.write(bImageFromConvert, "png", new File(
-				"/Users/ambarrana/Desktop/test123.png"));
+		ImageIO.write(bImageFromConvert, "jpg", new File(
+				"C:/Users/pratp/Desktop/DSC_123.jpg"));
 		getLastDoc.add(ursLastDoc);
 		
 		return new ResponseEntity<List<UsersDocument>>(getLastDoc, HttpStatus.OK);
