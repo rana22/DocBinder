@@ -30,7 +30,7 @@ public class UserDocumentServices {
 	UserDocumentRepository ursDocRepo;
 	
 	//@Scheduled(initialDelay = 10000, fixedDelay = 40000)
-	public void insertDocument(){
+	/*public void insertDocument(){
 		List<UsersDocument> docToAdd = new ArrayList<UsersDocument>();
 		UsersDocument ursDoc = new UsersDocument();
 		ursDoc.setDocId(123l);
@@ -39,7 +39,7 @@ public class UserDocumentServices {
 		
 		logger.info("inserting user document");
 		
-		File file = new File("C:/Users/pratp/Desktop/DSC_9000.jpg");
+		File file = new File("C:/Users/Niraj/Pictures/images/Capture2.PNG");
 		
 		byte[] bFile = new byte[(int) file.length()];
 		
@@ -52,8 +52,16 @@ public class UserDocumentServices {
 		     e.printStackTrace();
 	        }
 		ursDoc.setImage(bFile);
-		docToAdd.add(ursDoc);
-		
+		docToAdd.add(ursDoc);*/
+	
+	public void save(List<UsersDocument> docToAdd) {
 		ursDocRepo.save(docToAdd);
+		
 	}
+
+	public List<UsersDocument> findAll() {
+		// TODO Auto-generated method stub
+		return ursDocRepo.findAll();
+	}
+		
 }

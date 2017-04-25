@@ -1,10 +1,7 @@
 package com.management.doc.binder.web.services;
 
-import static org.assertj.core.api.Assertions.useDefaultRepresentation;
-
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -29,7 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.management.doc.binder.models.UsersDocument;
 import com.management.doc.binder.service.impl.Category;
-import com.management.doc.binder.services.UserDocumentRepository;
+import com.management.doc.binder.service.impl.UserDocumentServices;
 
 /**
  * @author ambarrana
@@ -42,7 +39,7 @@ public class UsersDocumentRestServices {
 	
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 	@Inject
-	UserDocumentRepository ursDocRepo;
+	UserDocumentServices usrDocService;
 	
 	
 	@RequestMapping(value="/saveImg", method= RequestMethod.POST, produces=MediaType.APPLICATION_JSON)
@@ -56,7 +53,7 @@ public class UsersDocumentRestServices {
 		byte [] byteArr = file.getBytes();
 		String category = req.getParameter("category");
 		String shortDesc = req.getParameter("description");
-		Category categoryType= Category.EDUCATION;
+		Category categoryType= Category.EDUCATION.BACHELOR;
 		
 		List<UsersDocument> docToAdd = new ArrayList<UsersDocument>();
 		UsersDocument ursDoc = new UsersDocument();
@@ -83,7 +80,7 @@ public class UsersDocumentRestServices {
 //		ursDoc.setImage(imageInByte);
 //		docToAdd.add(ursDoc);
 		docToAdd.add(ursDoc);
-		ursDocRepo.save(docToAdd);
+		usrDocService.save(docToAdd);
 		
 		return new ResponseEntity<List<UsersDocument>>(docToAdd, HttpStatus.OK);
 		}
@@ -92,9 +89,8 @@ public class UsersDocumentRestServices {
 	public @ResponseBody ResponseEntity<List<UsersDocument>> getDocument() throws Exception{
 		logger.info("Getting Document for user");
 		
-		List<UsersDocument> getAllDoc = new ArrayList<UsersDocument>();
 		List<UsersDocument> getLastDoc =  new ArrayList<UsersDocument>(); 
-		getAllDoc = ursDocRepo.findAll();
+		List<UsersDocument> getAllDoc = usrDocService.findAll();
 		int arraySize = getAllDoc.size();
 		
 		UsersDocument ursLastDoc = new UsersDocument();
@@ -106,7 +102,7 @@ public class UsersDocumentRestServices {
 		
 		BufferedImage bImageFromConvert = ImageIO.read(in);
 		ImageIO.write(bImageFromConvert, "jpg", new File(
-				"C:/Users/pratp/Desktop/DSC_123.jpg"));
+				"C:/Users/Niraj/Pictures/images/Capture.PNG"));
 		getLastDoc.add(ursLastDoc);
 		
 		return new ResponseEntity<List<UsersDocument>>(getLastDoc, HttpStatus.OK);
