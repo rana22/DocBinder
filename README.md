@@ -11,3 +11,11 @@ This is spring boot project for saving, managing and retrieving image documents.
 ##Setting up test
 
 
+Test:
+POST
+
+url : http://localhost:8090/users/document/saveImg
+
+body{
+  file: 'image/path'
+}
