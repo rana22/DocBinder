@@ -1,0 +1,11 @@
+#################
+# Files
+#################
+*.class
+*.classpath
+*.project
+*.settings
+#################
+# Directories
+#################
+target/
