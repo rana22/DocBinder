@@ -10,6 +10,7 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.core.MediaType;
 
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -30,7 +32,7 @@ import com.management.doc.binder.service.impl.UserDocumentServices;
 
 /**
  * @author ambarrana
- *
+ *mi
  */
 @Controller
 @RequestMapping("/users/document")
@@ -42,8 +44,9 @@ public class UsersDocumentRestServices {
 	UserDocumentServices usrDocService;
 	
 	
-	@RequestMapping(value="/saveImg", method= RequestMethod.POST, produces=MediaType.APPLICATION_JSON)
-	public @ResponseBody ResponseEntity<List<UsersDocument>> saveDocument(@RequestParam("file") MultipartFile file, HttpServletRequest req) throws Exception{
+	@RequestMapping(value="/saveImg", method= RequestMethod.POST)
+	public @ResponseBody ResponseEntity<List<UsersDocument>> saveDocument( @RequestBody @RequestParam("user") MultipartFile file, 
+			HttpServletRequest req) throws Exception{
 		
 		logger.info("Original file Name ==== {}", file.getOriginalFilename());
 		
@@ -67,18 +70,6 @@ public class UsersDocumentRestServices {
         ursDoc.setShortDesc(shortDesc);
         
 		logger.info("inserting user document");
-		
-//		BufferedImage originalImage =
-//                ImageIO.read(new File(imgPath));
-//
-//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//		ImageIO.write(originalImage, "png", baos);
-//		baos.flush();
-//		byte[] imageInByte = baos.toByteArray();
-//		baos.close();
-		
-//		ursDoc.setImage(imageInByte);
-//		docToAdd.add(ursDoc);
 		docToAdd.add(ursDoc);
 		usrDocService.save(docToAdd);
 		
@@ -89,22 +80,10 @@ public class UsersDocumentRestServices {
 	public @ResponseBody ResponseEntity<List<UsersDocument>> getDocument() throws Exception{
 		logger.info("Getting Document for user");
 		
-		List<UsersDocument> getLastDoc =  new ArrayList<UsersDocument>(); 
 		List<UsersDocument> getAllDoc = usrDocService.findAll();
 		int arraySize = getAllDoc.size();
+		logger.info("no of doc for user {}", arraySize);
 		
-		UsersDocument ursLastDoc = new UsersDocument();
-		ursLastDoc = getAllDoc.get(arraySize-1);
-		
-		InputStream in = new ByteArrayInputStream(ursLastDoc.getImage());
-		
-		logger.info("convert image {}", in);
-		
-		BufferedImage bImageFromConvert = ImageIO.read(in);
-		ImageIO.write(bImageFromConvert, "jpg", new File(
-				"C:/Users/Niraj/Pictures/images/Capture.PNG"));
-		getLastDoc.add(ursLastDoc);
-		
-		return new ResponseEntity<List<UsersDocument>>(getLastDoc, HttpStatus.OK);
+		return new ResponseEntity<List<UsersDocument>>(getAllDoc, HttpStatus.OK);
 		}
 }
