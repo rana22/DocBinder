@@ -45,11 +45,11 @@ public class UsersDocumentRestServices {
 	
 	
 	@RequestMapping(value="/saveImg", method= RequestMethod.POST)
-	public @ResponseBody ResponseEntity<List<UsersDocument>> saveDocument( @RequestBody @RequestParam("user") MultipartFile file, 
+	public @ResponseBody ResponseEntity<List<UsersDocument>> saveDocument( @RequestBody @RequestParam("file") MultipartFile file, 
 			HttpServletRequest req) throws Exception{
 		
 		logger.info("Original file Name ==== {}", file.getOriginalFilename());
-		
+		 	
 		String fileName = req.getParameter("name");
 		long contentLength = file.getSize();
 		String contentType = file.getContentType();
