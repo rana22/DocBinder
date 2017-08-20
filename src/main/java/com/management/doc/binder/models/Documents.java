@@ -5,10 +5,7 @@ package com.management.doc.binder.models;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * @author ambarrana
@@ -24,49 +21,46 @@ public class Documents implements Serializable {
 	private static final long serialVersionUID = 7828494267105408313L;
 	
 	@Id
+	@GeneratedValue(strategy= GenerationType.AUTO)
 	@Column(name="id")
     private Long id;
 	
-	@Column(name="image")
+	private String docId;
+	
 	private byte[] image;
 	
-	@Column(name="parts")
-	private Integer parts;
+	@OneToOne(fetch = FetchType.LAZY)
+	private DocumentDetails documentdetails;
 	
-	@Column(name="delete")
-	private Boolean isDelete;
-
+	public Documents(){}
+	public Documents(byte[] img,String docId){
+		this.image = img;
+		this.docId = docId;
+	}
+	
 	public Long getId() {
 		return id;
 	}
-
 	public void setId(Long id) {
 		this.id = id;
 	}
-
+	public String getDocId() {
+		return docId;
+	}
+	public void setDocId(String docId) {
+		this.docId = docId;
+	}
 	public byte[] getImage() {
 		return image;
 	}
-
 	public void setImage(byte[] image) {
 		this.image = image;
 	}
-
-	public Integer getParts() {
-		return parts;
+	public DocumentDetails getDocumentdetails() {
+		return documentdetails;
 	}
-
-	public void setParts(Integer parts) {
-		this.parts = parts;
+	public void setDocumentdetails(DocumentDetails documentdetails) {
+		this.documentdetails = documentdetails;
 	}
-
-	public Boolean getIsDelete() {
-		return isDelete;
-	}
-
-	public void setIsDelete(Boolean isDelete) {
-		this.isDelete = isDelete;
-	}
-	
 	
 }

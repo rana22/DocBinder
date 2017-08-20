@@ -36,11 +36,11 @@ public interface Category {
 	}
 	
 	enum PERSONAL_DOC implements Category {
-		DRIVER_LISCENCE,
+		PERSONAL,
 	}
 
 	enum EDUCATION implements Category {
-		BACHELOR, MASTER, SLC,
+		BACHELOR, ADVANCE, HIGHER, SECONDARY
 	}
 
 	enum BANK implements Category {
