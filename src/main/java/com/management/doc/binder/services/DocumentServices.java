@@ -4,6 +4,8 @@
 package com.management.doc.binder.services;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import javax.inject.Inject;
@@ -41,6 +43,7 @@ public class DocumentServices {
 			docDetails.setDocType(CategoryUtil.getCategoryType(req.getParameter("category")).toString());
 			docDetails.getDocuments().setDocId(docDetails.getDocId());
 			docDetails.getDocuments().setImage(file.getBytes());
+			docDetails.setThumbnail(file.getBytes());
 			documentDetailsRepository.saveAndFlush(docDetails);
 			logger.info("Document is inserted successfully!!");
 			
@@ -49,5 +52,18 @@ public class DocumentServices {
 		}
 		
 		return docDetails;
+	}
+	
+	
+	public List<DocumentDetails> returnAllDocuments() {
+		List<DocumentDetails> allDocuments = new ArrayList<DocumentDetails>();
+		
+		try{
+			 allDocuments = documentDetailsRepository.findAll();
+		}catch (RuntimeException e){
+			logger.warn("Exception while saving document!!");
+		}
+		
+		return allDocuments;
 	}
 }

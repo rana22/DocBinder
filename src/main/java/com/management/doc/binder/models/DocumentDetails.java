@@ -55,6 +55,9 @@ public class DocumentDetails implements Serializable{
 	@Column(name="category")
 	private String category;
 	
+	@Column(name="thumbnail")
+	private byte[] thumbnail;
+	
 	@OneToOne(mappedBy ="documentdetails", optional= false, cascade = CascadeType.ALL)
 	private Documents documents;
 	
@@ -156,5 +159,21 @@ public class DocumentDetails implements Serializable{
 
 	public void setDocuments(Documents documents) {
 		this.documents = documents;
+	}
+
+	public Date getUploadedDate() {
+		return uploadedDate;
+	}
+
+	public void setUploadedDate(Date uploadedDate) {
+		this.uploadedDate = uploadedDate;
+	}
+
+	public byte[] getThumbnail() {
+		return thumbnail;
+	}
+
+	public void setThumbnail(byte[] thumbnail) {
+		this.thumbnail = thumbnail;
 	}
 }
