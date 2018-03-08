@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import org.slf4j.Logger;
@@ -45,7 +46,7 @@ public class DocumentController {
 	@RequestMapping(value="/saveDocument", method= RequestMethod.POST)
 	public @ResponseBody ResponseEntity<DocumentDetails> saveDocument (@RequestBody @RequestParam("file") MultipartFile file, 
 			HttpServletRequest req) throws Exception{
-		DocumentDetails document = new DocumentDetails();
+//		DocumentDetails document = new DocumentDetails();
 		try{
 			documentServices.saveDocument(file, req);
 		}catch (RuntimeException e){
@@ -62,6 +63,16 @@ public class DocumentController {
 		
 		return ResponseEntity.accepted().body(documentList);
 	}
+	
+	
+	@RequestMapping(value="/query/getDocuments", method= RequestMethod.GET, produces = MediaType.APPLICATION_JSON)
+	public @ResponseBody ResponseEntity<List<DocumentDetails>> getDocumentsByQuery (@QueryParam("query") String query) throws Exception{
+		List<DocumentDetails> documentList = documentServices.getDocumentByQuery(query);
+		
+		return ResponseEntity.accepted().body(documentList);
+	}
+	
+	
 	
 	
 }

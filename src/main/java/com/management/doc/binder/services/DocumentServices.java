@@ -3,6 +3,7 @@
  */
 package com.management.doc.binder.services;
 
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.management.doc.binder.models.DocumentDetails;
 import com.management.doc.binder.repository.DocumentDetailsRepository;
 import com.management.doc.binder.services.util.CategoryUtil;
+import com.management.doc.binder.services.util.ImageUtilService;
 
 /**
  * @author ambarrana
@@ -32,6 +34,8 @@ public class DocumentServices {
 	@Inject
 	private DocumentDetailsRepository documentDetailsRepository;
 	
+	ImageUtilService imgService = new ImageUtilService();
+	
 	public DocumentDetails saveDocument(MultipartFile file, HttpServletRequest req){
 		DocumentDetails docDetails = new DocumentDetails();
 		try{
@@ -40,11 +44,12 @@ public class DocumentServices {
 			docDetails.setDescription(req.getParameter("description"));
 			docDetails.setDocSize(file.getSize());
 			docDetails.setDocId(UUID.randomUUID().toString());
-			docDetails.setDocType(CategoryUtil.getCategoryType(req.getParameter("category")).toString());
+			docDetails.setCategory(CategoryUtil.getCategoryType(req.getParameter("category")).toString());
 			docDetails.getDocuments().setDocId(docDetails.getDocId());
 			docDetails.getDocuments().setImage(file.getBytes());
-			docDetails.setThumbnail(file.getBytes());
+			docDetails.setThumbnail(imgService.getThumbnail(file.getBytes()));
 			documentDetailsRepository.saveAndFlush(docDetails);
+			
 			logger.info("Document is inserted successfully!!");
 			
 		}catch(RuntimeException | IOException e){
@@ -65,5 +70,20 @@ public class DocumentServices {
 		}
 		
 		return allDocuments;
+	}
+	
+	public List<DocumentDetails> getDocumentByQuery(String query){
+	
+		logger.info("Query param to search string is {}", query);
+		
+		List<DocumentDetails> documents = new ArrayList<DocumentDetails>();
+		try{
+				documents= documentDetailsRepository.findDocumentByQuery(query);
+		}catch (RuntimeException e){
+			logger.warn(e.toString());
+			logger.warn("Exception while retriving document!!");
+		}
+		
+		return documents;
 	}
 }
